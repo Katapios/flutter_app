@@ -92,3 +92,10 @@ flutter:
 
   assets:
     - assets/gaika.png
+    - assets/10.1 background.jpg
+
+  fonts:
+     - family: Oswald
+       fonts:
+         - asset: assets/fonts/5.2 Oswald-Bold.ttf
+           weight: 700
