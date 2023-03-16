@@ -12,6 +12,59 @@ class _AuthPageState extends State<AuthPage> {
   late String _passwordValue;
   bool _acceptTerms = false;
 
+  DecorationImage _buildBackgroundImage() {
+    return DecorationImage(
+      fit: BoxFit.cover,
+      colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.dstATop),
+      image: AssetImage('assets/10.1 background.jpg'),
+    );
+  }
+
+  Widget _buildEmailTextField() {
+    return TextField(
+      decoration: InputDecoration(labelText: 'E-Mail',filled: true, fillColor: Colors.white),
+      keyboardType: TextInputType.emailAddress,
+      onChanged: (String value) {
+        setState(() {
+          _emailValue = value;
+        });
+      },
+    );
+  }
+
+  Widget _buildPasswordTextField() {
+    return TextField(
+      decoration: InputDecoration(labelText: 'Password',filled: true, fillColor: Colors.white),
+      obscureText: true,
+      onChanged: (String value) {
+        setState(() {
+          _passwordValue = value;
+        });
+      },
+    );
+  }
+
+  void _submitForm() {
+    print(_emailValue);
+    print(_passwordValue);
+    Navigator.pushReplacementNamed(context, '/products');
+  }
+
+  Widget _buildAcceptSwich() {
+    return SwitchListTile(
+      tileColor: Colors.amber,
+      activeColor: Colors.amber,
+      inactiveThumbColor: Colors.white,
+      value: _acceptTerms,
+      onChanged: (bool value) {
+        setState(() {
+          _acceptTerms = value;
+        });
+      },
+      title: Text('Accept Terms',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,52 +73,21 @@ class _AuthPageState extends State<AuthPage> {
         ),
         body: Container(
           decoration: BoxDecoration(
-            image: DecorationImage(
-              fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.dstATop),
-              image: AssetImage('assets/10.1 background.jpg'),
-            ),
+            image: _buildBackgroundImage(),
           ),
           padding: EdgeInsets.all(10.0),
           child: Center(child: SingleChildScrollView(
             child: Column(
               children: [
-                TextField(
-                  decoration: InputDecoration(labelText: 'E-Mail',filled: true, fillColor: Colors.white),
-                  keyboardType: TextInputType.emailAddress,
-                  onChanged: (String value) {
-                    setState(() {
-                      _emailValue = value;
-                    });
-                  },
-                ),
+                _buildEmailTextField(),
                 SizedBox(
                   height: 10.9,
                 ),
-                TextField(
-                  decoration: InputDecoration(labelText: 'Password',filled: true, fillColor: Colors.white),
-                  obscureText: true,
-                  onChanged: (String value) {
-                    setState(() {
-                      _passwordValue = value;
-                    });
-                  },
-                ),
+                _buildPasswordTextField(),
                 SizedBox(
                   height: 10.9,
                 ),
-                SwitchListTile(
-                  tileColor: Colors.amber,
-                  activeColor: Colors.amber,
-                  inactiveThumbColor: Colors.white,
-                  value: _acceptTerms,
-                  onChanged: (bool value) {
-                    setState(() {
-                      _acceptTerms = value;
-                    });
-                  },
-                  title: Text('Accept Terms',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
-                ),
+                _buildAcceptSwich(),
                 SizedBox(
                   height: 10.9,
                 ),
@@ -77,9 +99,7 @@ class _AuthPageState extends State<AuthPage> {
                     ),
                     //style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
 
-                    onPressed: () {
-                      Navigator.pushReplacementNamed(context, '/products');
-                    },
+                    onPressed: _submitForm,
                     child: Text('Login'),
                   ),
                 ),
