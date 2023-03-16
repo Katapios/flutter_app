@@ -15,14 +15,16 @@ class _AuthPageState extends State<AuthPage> {
   DecorationImage _buildBackgroundImage() {
     return DecorationImage(
       fit: BoxFit.cover,
-      colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.dstATop),
+      colorFilter:
+          ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.dstATop),
       image: AssetImage('assets/10.1 background.jpg'),
     );
   }
 
   Widget _buildEmailTextField() {
     return TextField(
-      decoration: InputDecoration(labelText: 'E-Mail',filled: true, fillColor: Colors.white),
+      decoration: InputDecoration(
+          labelText: 'E-Mail', filled: true, fillColor: Colors.white),
       keyboardType: TextInputType.emailAddress,
       onChanged: (String value) {
         setState(() {
@@ -34,7 +36,8 @@ class _AuthPageState extends State<AuthPage> {
 
   Widget _buildPasswordTextField() {
     return TextField(
-      decoration: InputDecoration(labelText: 'Password',filled: true, fillColor: Colors.white),
+      decoration: InputDecoration(
+          labelText: 'Password', filled: true, fillColor: Colors.white),
       obscureText: true,
       onChanged: (String value) {
         setState(() {
@@ -61,12 +64,17 @@ class _AuthPageState extends State<AuthPage> {
           _acceptTerms = value;
         });
       },
-      title: Text('Accept Terms',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+      title: Text(
+        'Accept Terms',
+        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final double  deviceWidth = MediaQuery.of(context).size.width;
+    final targetWidth = deviceWidth > 550.0 ? 500.0 : deviceWidth * 0.95;
     return Scaffold(
         appBar: AppBar(
           title: const Text('Login'),
@@ -76,37 +84,41 @@ class _AuthPageState extends State<AuthPage> {
             image: _buildBackgroundImage(),
           ),
           padding: EdgeInsets.all(10.0),
-          child: Center(child: SingleChildScrollView(
-            child: Column(
-              children: [
-                _buildEmailTextField(),
-                SizedBox(
-                  height: 10.9,
-                ),
-                _buildPasswordTextField(),
-                SizedBox(
-                  height: 10.9,
-                ),
-                _buildAcceptSwich(),
-                SizedBox(
-                  height: 10.9,
-                ),
-                Center(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.amber, // background
-                      onPrimary: Colors.white, // foreground
+          child: Center(
+            child: SingleChildScrollView(
+              child: Container(
+                width: targetWidth,
+                child: Column(
+                  children: [
+                    _buildEmailTextField(),
+                    SizedBox(
+                      height: 10.0,
                     ),
-                    //style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                    _buildPasswordTextField(),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    _buildAcceptSwich(),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    Center(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.amber, // background
+                          onPrimary: Colors.white, // foreground
+                        ),
+                        //style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
 
-                    onPressed: _submitForm,
-                    child: Text('Login'),
-                  ),
+                        onPressed: _submitForm,
+                        child: Text('Login'),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
-
-          ),),
+          ),
         ));
   }
 }

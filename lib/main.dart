@@ -44,6 +44,8 @@ class _MyAppState extends State<MyApp> {
         brightness: Brightness.light,
         primarySwatch: Colors.amber,
         accentColor: Colors.blueGrey,
+        //buttonColor: Colors.deepPurple,
+
       ),
       debugShowCheckedModeBanner: false,
       //home: AuthPage(),
