@@ -7,11 +7,11 @@ class ProductControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        primary: Colors.red, // background
-        onPrimary: Colors.white, // foreground
-      ),
-      //style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+      // style: ElevatedButton.styleFrom(
+      //   primary: Colors.red, // background
+      //   onPrimary: Colors.white, // foreground
+      // ),
+      style: ElevatedButton.styleFrom(backgroundColor: Colors.green, foregroundColor: Colors.white),
 
       onPressed: () {
         addProduct({'title': 'Chocolate', 'image': 'assets/gaika.png'});

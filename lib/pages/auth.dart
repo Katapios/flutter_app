@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 
 class AuthPage extends StatefulWidget {
-  const AuthPage({Key? key}) : super(key: key);
-
   @override
   State<AuthPage> createState() => _AuthPageState();
 }
 
 class _AuthPageState extends State<AuthPage> {
-  late String _emailValue;
-  late String _passwordValue;
+  String _emailValue = 'emailValue';
+  String _passwordValue = 'passValue';
   bool _acceptTerms = false;
 
   DecorationImage _buildBackgroundImage() {

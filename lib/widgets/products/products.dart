@@ -1,4 +1,3 @@
-import 'package:denns_introduction_app/widgets/products/price_tag.dart';
 import 'package:denns_introduction_app/widgets/products/product_card.dart';
 import 'package:flutter/material.dart';
 
