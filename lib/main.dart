@@ -23,10 +23,18 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   List<Map<String, dynamic>> _products = [];
+  final int _productIndex = 1;
+
 
   void _addProduct(Map<String, dynamic> product) {
     setState(() {
       _products.add(product);
+    });
+  }
+
+  void _updateProduct(int index, Map<String, dynamic> product) {
+    setState(() {
+      _products[index] = product;
     });
   }
 
@@ -35,6 +43,7 @@ class _MyAppState extends State<MyApp> {
       _products.removeAt(index);
     });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +61,7 @@ class _MyAppState extends State<MyApp> {
         '/': (BuildContext context) => AuthPage(),
         '/products': (BuildContext context) => ProductsPage(_products),
         '/admin': (BuildContext context) =>
-            ProductsAdminPage(_addProduct, _deleteProduct, _products),
+            ProductsAdminPage(_addProduct, _updateProduct, _deleteProduct, _products, _productIndex),
       },
       onGenerateRoute: (RouteSettings settings) {
         final List<String> pathElements = settings.name!.split('/');
