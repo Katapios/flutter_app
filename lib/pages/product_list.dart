@@ -6,7 +6,7 @@ class ProductListPage extends StatelessWidget {
   final Function updateProduct;
   final List<Map<String, dynamic>> products;
 
-  ProductListPage(this.addProduct, this.products,this.updateProduct);
+  ProductListPage(this.addProduct, this.products, this.updateProduct);
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +23,8 @@ class ProductListPage extends StatelessWidget {
                   builder: (BuildContext context) {
                     return ProductEditPage(
                       product: products[index],
-                      updateProduct: updateProduct, addProduct: addProduct,
-                      productIndex: index,
+                      updateProduct: updateProduct,
+                      productIndex: index, addProduct: addProduct,
                     );
                   },
                 ),
