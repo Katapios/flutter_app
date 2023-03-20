@@ -1,4 +1,4 @@
-import 'package:denns_introduction_app/widgets/ui_elements/titile_default.dart';
+import 'package:denns_introduction_app/widgets/ui_elements/title_default.dart';
 import 'package:flutter/material.dart';
 
 class ProductPage extends StatelessWidget {

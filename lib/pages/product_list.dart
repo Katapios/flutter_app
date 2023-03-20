@@ -1,39 +1,70 @@
-import 'package:denns_introduction_app/pages/product_edit.dart';
 import 'package:flutter/material.dart';
+
+import '../pages/product_edit.dart';
+import '../models/product.dart';
 
 class ProductListPage extends StatelessWidget {
   final Function addProduct;
   final Function updateProduct;
-  final List<Map<String, dynamic>> products;
+  final Function deleteProduct;
+  final List<Product> products;
 
-  ProductListPage(this.addProduct, this.products, this.updateProduct);
+  ProductListPage(this.addProduct, this.products, this.updateProduct, this.deleteProduct);
 
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemBuilder: (BuildContext context, int index) {
-        return ListTile(
-          leading: Image.asset(products[index]['image']),
-          title: Text(products[index]['title']),
-          trailing: IconButton(
-            icon: Icon(Icons.edit),
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (BuildContext context) {
-                    return ProductEditPage(
-                      product: products[index],
-                      updateProduct: updateProduct,
-                      productIndex: index, addProduct: addProduct,
-                    );
-                  },
-                ),
+  Widget _buildEditButton (BuildContext context, int index) {
+    return IconButton(
+      icon: Icon(Icons.edit),
+      onPressed: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (BuildContext context) {
+              return ProductEditPage(
+                product: products[index],
+                updateProduct: updateProduct,
+                productIndex: index,
+                addProduct: addProduct,
               );
             },
           ),
         );
       },
-      itemCount: products.length,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(top: 10),
+      child: ListView.builder(
+        itemBuilder: (BuildContext context, int index) {
+          return Dismissible(
+            key: Key(products[index].title),
+            onDismissed: (DismissDirection direction) {
+              if(direction == DismissDirection.endToStart) {
+                deleteProduct(index);
+              } else if (direction == DismissDirection.startToEnd) {
+                print('swipe start to end');
+              } else {
+                print('other swiping');
+              }
+            },
+            background: Container(margin: EdgeInsets.only(bottom: 15),color: Colors.amber,),
+            child: Column(
+            children: [
+              ListTile(
+                leading: CircleAvatar(
+                  backgroundImage: AssetImage(products[index].image),
+                ),
+                title: Text(products[index].title),
+                subtitle: Text('\$${products[index].price.toString()}'),
+                trailing: _buildEditButton(context, index)
+              ),
+              Divider(color: Colors.grey, thickness: 1),
+            ],
+          ),);
+        },
+        itemCount: products.length,
+      ),
     );
   }
 }

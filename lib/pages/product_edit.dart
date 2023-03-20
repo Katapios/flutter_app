@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
+
 import '../widgets/helpers/ensure_visible.dart';
+import '../models/product.dart';
 
 class ProductEditPage extends StatefulWidget {
   final Function addProduct;
   final Function updateProduct;
-  final Map<String, dynamic> product;
+  final Product product;
   final int productIndex;
 
-  ProductEditPage(
-      {required this.addProduct,
-      required this.updateProduct,
-      required this.product,
-      required this.productIndex});
+  const ProductEditPage({required this.addProduct, required this.updateProduct, required this.product, required this.productIndex});
 
   @override
   State<ProductEditPage> createState() => _ProductEditPageState();
@@ -35,7 +33,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
       child: TextFormField(
         focusNode: _titleFocusNode,
         decoration: InputDecoration(labelText: 'product title'),
-        initialValue: widget.product.isEmpty ? '' : widget.product['title'],
+        initialValue: widget.product.title.isEmpty ? '' : widget.product.title,
         validator: (value) {
           if (value == null || value.isEmpty || value.length < 5) {
             return 'Please type 5 or more characters to title';
@@ -56,7 +54,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
         focusNode: _descriptionFocusNode,
         decoration: InputDecoration(labelText: 'product description'),
         initialValue:
-            widget.product.isEmpty ? '' : widget.product['description'],
+            widget.product.description.isEmpty ? '' : widget.product.description,
         validator: (value) {
           if (value == null || value.isEmpty || value.length < 10) {
             return 'Please type 10 or more characters to description';
@@ -78,7 +76,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
         focusNode: _priceFocusNode,
         decoration: InputDecoration(labelText: 'product price'),
         initialValue:
-            widget.product.isEmpty ? '' : widget.product['price'].toString(),
+            widget.product.price.isNaN ? '' : widget.product.price.toString(),
         validator: (dynamic value) {
           // if (value.trim().length <= 0) {
           if (value.isEmpty ||
@@ -94,29 +92,12 @@ class _ProductEditPageState extends State<ProductEditPage> {
     );
   }
 
-  void _submitForm() {
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
-    _formKey.currentState?.save();
-    //widget.addProduct(_formData);
-
-    if (widget.product.isEmpty) {
-      widget.addProduct(_formData);
-    } else {
-      widget.updateProduct(widget.productIndex, _formData);
-    }
-
-    Navigator.pushReplacementNamed(context, '/products');
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildPageContent (BuildContext context) {
     final double deviceWidth = MediaQuery.of(context).size.width;
     final targetWidth = deviceWidth > 550.0 ? 500.0 : deviceWidth * 0.95;
     final double targetPadding = deviceWidth - targetWidth;
 
-    final Widget pageContent = GestureDetector(
+    return GestureDetector(
       onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
       },
@@ -152,6 +133,41 @@ class _ProductEditPageState extends State<ProductEditPage> {
         ),
       ),
     );
+  }
+
+  void _submitForm() {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+    _formKey.currentState?.save();
+    //widget.addProduct(_formData);
+
+    if (widget.product.title.isEmpty) {
+      widget.addProduct(
+        Product(
+            title: _formData['title'],
+            description: _formData['description'],
+            price: _formData['price'],
+            image: _formData['image']),
+      );
+    } else {
+      widget.updateProduct(
+        widget.productIndex,
+        Product(
+            title: _formData['title'],
+            description: _formData['description'],
+            price: _formData['price'],
+            image: _formData['image']),
+      );
+      print('widget.productIndex ' + widget.productIndex.toString());
+    }
+    Navigator.pushReplacementNamed(context, '/products');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    final Widget pageContent = _buildPageContent(context);
     return widget.product == null
         ? pageContent
         : Scaffold(
