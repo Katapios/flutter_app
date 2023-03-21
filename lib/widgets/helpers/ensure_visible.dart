@@ -2,15 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:meta/meta.dart';
 
 class EnsureVisibleWhenFocused extends StatefulWidget {
   const EnsureVisibleWhenFocused({
     Key? key,
     required this.child,
     required this.focusNode,
-    this.curve: Curves.ease,
-    this.duration: const Duration(milliseconds: 100),
+    this.curve = Curves.ease,
+    this.duration = const Duration(milliseconds: 100),
   }) : super(key: key);
 
   /// The node we will monitor to determine if the child is focused
@@ -29,7 +28,8 @@ class EnsureVisibleWhenFocused extends StatefulWidget {
   /// Defaults to 100 milliseconds.
   final Duration duration;
 
-  EnsureVisibleWhenFocusedState createState() => new EnsureVisibleWhenFocusedState();
+  @override
+  EnsureVisibleWhenFocusedState createState() => EnsureVisibleWhenFocusedState();
 }
 
 class EnsureVisibleWhenFocusedState extends State<EnsureVisibleWhenFocused> {
@@ -45,22 +45,21 @@ class EnsureVisibleWhenFocusedState extends State<EnsureVisibleWhenFocused> {
     widget.focusNode.removeListener(_ensureVisible);
   }
 
-  Future<Null> _ensureVisible() async {
+  Future<void> _ensureVisible() async {
     // Wait for the keyboard to come into view
     // TODO: position doesn't seem to notify listeners when metrics change,
     // perhaps a NotificationListener around the scrollable could avoid
     // the need insert a delay here.
     await Future.delayed(const Duration(milliseconds: 300));
 
-    if (!widget.focusNode.hasFocus)
+    if (!widget.focusNode.hasFocus) {
       return;
+    }
 
     final RenderObject? object = context.findRenderObject();
     final RenderAbstractViewport viewport = RenderAbstractViewport.of(object);
-    assert(viewport != null);
 
     ScrollableState scrollableState = Scrollable.of(context);
-    assert(scrollableState != null);
 
     ScrollPosition position = scrollableState.position;
     double alignment;
@@ -82,5 +81,6 @@ class EnsureVisibleWhenFocusedState extends State<EnsureVisibleWhenFocused> {
     );
   }
 
+  @override
   Widget build(BuildContext context) => widget.child;
 }

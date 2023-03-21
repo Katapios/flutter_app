@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class AuthPage extends StatefulWidget {
+  const AuthPage({super.key});
+
   @override
   State<AuthPage> createState() => _AuthPageState();
 }
@@ -15,13 +17,13 @@ class _AuthPageState extends State<AuthPage> {
       fit: BoxFit.cover,
       colorFilter:
           ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.dstATop),
-      image: AssetImage('assets/10.1 background.jpg'),
+      image: const AssetImage('assets/10.1 background.jpg'),
     );
   }
 
   Widget _buildEmailTextField() {
     return TextField(
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
           labelText: 'E-Mail', filled: true, fillColor: Colors.white),
       keyboardType: TextInputType.emailAddress,
       onChanged: (String value) {
@@ -34,7 +36,7 @@ class _AuthPageState extends State<AuthPage> {
 
   Widget _buildPasswordTextField() {
     return TextField(
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
           labelText: 'Password', filled: true, fillColor: Colors.white),
       obscureText: true,
       onChanged: (String value) {
@@ -62,7 +64,7 @@ class _AuthPageState extends State<AuthPage> {
           _acceptTerms = value;
         });
       },
-      title: Text(
+      title: const Text(
         'Accept Terms',
         style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
       ),
@@ -81,35 +83,34 @@ class _AuthPageState extends State<AuthPage> {
           decoration: BoxDecoration(
             image: _buildBackgroundImage(),
           ),
-          padding: EdgeInsets.all(10.0),
+          padding: const EdgeInsets.all(10.0),
           child: Center(
             child: SingleChildScrollView(
-              child: Container(
+              child: SizedBox(
                 width: targetWidth,
                 child: Column(
                   children: [
                     _buildEmailTextField(),
-                    SizedBox(
+                    const SizedBox(
                       height: 10.0,
                     ),
                     _buildPasswordTextField(),
-                    SizedBox(
+                    const SizedBox(
                       height: 10.0,
                     ),
                     _buildAcceptSwich(),
-                    SizedBox(
+                    const SizedBox(
                       height: 10.0,
                     ),
                     Center(
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.amber, // background
-                          onPrimary: Colors.white, // foreground
+                          foregroundColor: Colors.white, backgroundColor: Colors.amber, // foreground
                         ),
                         //style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
 
                         onPressed: _submitForm,
-                        child: Text('Login'),
+                        child: const Text('Login'),
                       ),
                     ),
                   ],

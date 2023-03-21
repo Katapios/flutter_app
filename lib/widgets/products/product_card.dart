@@ -9,16 +9,16 @@ class ProductCard extends StatelessWidget {
   final Product product;
   final int productIndex;
 
-  ProductCard(this.product, this.productIndex);
+  const ProductCard(this.product, this.productIndex);
 
   Widget _buildTitlePriceRow() {
     return Container(
-        margin: EdgeInsets.only(top: 10.0),
+        margin: const EdgeInsets.only(top: 10.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TitleDefault(product.title),
-            SizedBox(
+            const SizedBox(
               width: 8.0,
             ),
             PriceTag(product.price.toString(),),
@@ -31,10 +31,10 @@ class ProductCard extends StatelessWidget {
       alignment: MainAxisAlignment.center,
       children: <Widget>[
         IconButton(
-          icon: Icon(Icons.info),
+          icon: const Icon(Icons.info),
           color: Theme.of(context).primaryColor,
           onPressed: () => Navigator.pushNamed<dynamic>(
-              context, '/product/' + productIndex.toString()),
+              context, '/product/$productIndex'),
           style: ButtonStyle(
               foregroundColor:
               MaterialStateProperty.all<Color>(Colors.white),
@@ -42,7 +42,7 @@ class ProductCard extends StatelessWidget {
               MaterialStateProperty.all<Color>(Colors.red)),
         ),
         IconButton(
-          icon: Icon(Icons.favorite_border, color: Colors.red,),
+          icon: const Icon(Icons.favorite_border, color: Colors.red,),
           onPressed: () => {},
           style: ButtonStyle(
               foregroundColor:
@@ -61,7 +61,7 @@ class ProductCard extends StatelessWidget {
           children: <Widget>[
             Image.asset(product.image),
             _buildTitlePriceRow(),
-            AddressTag('Union Square, San Francisco'),
+            const AddressTag('Union Square, San Francisco'),
             _buildActionButtons(context),
           ],
         ));
