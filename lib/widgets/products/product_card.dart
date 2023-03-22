@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
+import 'package:scoped_model/scoped_model.dart';
+
 import './address_tag.dart';
 import './price_tag.dart';
 import '../ui_elements/title_default.dart';
 import '../../models/product.dart';
+import '../../scoped-models/products.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
@@ -13,17 +16,20 @@ class ProductCard extends StatelessWidget {
 
   Widget _buildTitlePriceRow() {
     return Container(
-        margin: const EdgeInsets.only(top: 10.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TitleDefault(product.title),
-            const SizedBox(
-              width: 8.0,
-            ),
-            PriceTag(product.price.toString(),),
-          ],
-        ),);
+      margin: const EdgeInsets.only(top: 10.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          TitleDefault(product.title),
+          const SizedBox(
+            width: 8.0,
+          ),
+          PriceTag(
+            product.price.toString(),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildActionButtons(BuildContext context) {
@@ -33,23 +39,30 @@ class ProductCard extends StatelessWidget {
         IconButton(
           icon: const Icon(Icons.info),
           color: Theme.of(context).primaryColor,
-          onPressed: () => Navigator.pushNamed<dynamic>(
-              context, '/product/$productIndex'),
+          onPressed: () =>
+              Navigator.pushNamed<dynamic>(context, '/product/$productIndex'),
           style: ButtonStyle(
-              foregroundColor:
-              MaterialStateProperty.all<Color>(Colors.white),
-              backgroundColor:
-              MaterialStateProperty.all<Color>(Colors.red)),
+              foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+              backgroundColor: MaterialStateProperty.all<Color>(Colors.red)),
         ),
-        IconButton(
-          icon: const Icon(Icons.favorite_border, color: Colors.red,),
-          onPressed: () => {},
-          style: ButtonStyle(
-              foregroundColor:
-              MaterialStateProperty.all<Color>(Colors.white),
-              backgroundColor:
-              MaterialStateProperty.all<Color>(Colors.red)),
-        ),
+        ScopedModelDescendant<ProductsModel>(builder:
+            (BuildContext context, Widget? child, ProductsModel model) {
+          return IconButton(
+            icon: Icon(
+              model.products[productIndex].isFavorite
+                  ? Icons.favorite
+                  : Icons.favorite_border,
+              color: Colors.red,
+            ),
+            onPressed: () => {
+              model.selectProduct(productIndex),
+              model.toggleProductFavoriteStatus(),
+            },
+            style: ButtonStyle(
+                foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.red)),
+          );
+        }),
       ],
     );
   }
@@ -58,12 +71,12 @@ class ProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
         child: Column(
-          children: <Widget>[
-            Image.asset(product.image),
-            _buildTitlePriceRow(),
-            const AddressTag('Union Square, San Francisco'),
-            _buildActionButtons(context),
-          ],
-        ));
+      children: <Widget>[
+        Image.asset(product.image),
+        _buildTitlePriceRow(),
+        const AddressTag('Union Square, San Francisco'),
+        _buildActionButtons(context),
+      ],
+    ));
   }
 }

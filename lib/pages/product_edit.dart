@@ -147,7 +147,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
     //widget.addProduct(_formData);
 
     if (selectedProductIndex == null) {
-      print(selectedProductIndex.toString());
+      print("addIndex= " + selectedProductIndex.toString());
       addProduct(
         Product(
             title: _formData['title'],
@@ -156,6 +156,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
             image: _formData['image']),
       );
     } else {
+      print("updateIndex= " + selectedProductIndex.toString());
       updateProduct(
         Product(
             title: _formData['title'],

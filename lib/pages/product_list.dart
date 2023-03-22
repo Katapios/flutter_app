@@ -30,6 +30,7 @@ class ProductListPage extends StatelessWidget {
       child: ScopedModelDescendant<ProductsModel>(builder: (BuildContext context, Widget? child, ProductsModel model){
       return ListView.builder(
         itemBuilder: (BuildContext context, int index) {
+          print('my index is ' + index.toString());
           return Dismissible(
             key: Key(model.products[index].title),
             onDismissed: (DismissDirection direction) {
