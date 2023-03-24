@@ -8,9 +8,13 @@ class AuthPage extends StatefulWidget {
 }
 
 class _AuthPageState extends State<AuthPage> {
-  String _emailValue = 'emailValue';
-  String _passwordValue = 'passValue';
-  bool _acceptTerms = false;
+  final Map<String, dynamic> _formData = {
+    'email': null,
+    'password': null,
+    'acceptTerms': false
+  };
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKeySwitchListTile = GlobalKey<FormState>();
 
   DecorationImage _buildBackgroundImage() {
     return DecorationImage(
@@ -22,72 +26,104 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   Widget _buildEmailTextField() {
-    return TextField(
+    return TextFormField(
       decoration: const InputDecoration(
           labelText: 'E-Mail', filled: true, fillColor: Colors.white),
       keyboardType: TextInputType.emailAddress,
+      validator: (dynamic value) {
+        if (value.isEmpty ||
+            !RegExp(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
+                .hasMatch(value)) {
+          return 'Please enter a valid email';
+        }
+        return null;
+      },
       onChanged: (String value) {
         setState(() {
-          _emailValue = value;
+          _formData['email'] = value;
         });
       },
     );
   }
 
   Widget _buildPasswordTextField() {
-    return TextField(
+    return TextFormField(
       decoration: const InputDecoration(
           labelText: 'Password', filled: true, fillColor: Colors.white),
       obscureText: true,
+      validator: (dynamic value) {
+        if (value.isEmpty || value.length < 6) {
+          return 'Password invalid';
+        }
+        return null;
+      },
       onChanged: (String value) {
         setState(() {
-          _passwordValue = value;
+          _formData['password'] = value;
         });
+      },
+    );
+  }
+
+  Widget _buildAcceptSwich() {
+    return FormField(
+      key: _formKeySwitchListTile,
+      initialValue: false,
+      validator: (val) {
+        if (val == false) return 'Please accept the terms';
+        return null;
+      },
+      builder: (FormFieldState<bool> field) {
+        return InputDecorator(
+          decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.white,
+              errorText: field.errorText,
+
+          ),
+          child: SwitchListTile(
+            contentPadding: EdgeInsets.all(0),
+            activeColor: Colors.amber,
+            title: const Text("Accept Terms"),
+            value: field.value!,
+            onChanged: (value) {
+              field.didChange(value);
+              _formData['acceptTerms'] = value;
+            },
+          ),
+        );
       },
     );
   }
 
   void _submitForm() {
-    print(_emailValue);
-    print(_passwordValue);
+    if (!_formKey.currentState!.validate() || !_formData['acceptTerms']) {
+      return;
+    }
+    _formKey.currentState!.save();
+    print(_formData);
     Navigator.pushReplacementNamed(context, '/products');
-  }
-
-  Widget _buildAcceptSwich() {
-    return SwitchListTile(
-      tileColor: Colors.amber,
-      activeColor: Colors.amber,
-      inactiveThumbColor: Colors.white,
-      value: _acceptTerms,
-      onChanged: (bool value) {
-        setState(() {
-          _acceptTerms = value;
-        });
-      },
-      title: const Text(
-        'Accept Terms',
-        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-      ),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final double  deviceWidth = MediaQuery.of(context).size.width;
+    final double deviceWidth = MediaQuery.of(context).size.width;
     final targetWidth = deviceWidth > 550.0 ? 500.0 : deviceWidth * 0.95;
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Login'),
+      appBar: AppBar(
+        title: const Text('Login'),
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          image: _buildBackgroundImage(),
         ),
-        body: Container(
-          decoration: BoxDecoration(
-            image: _buildBackgroundImage(),
-          ),
-          padding: const EdgeInsets.all(10.0),
-          child: Center(
-            child: SingleChildScrollView(
-              child: SizedBox(
-                width: targetWidth,
+        padding: const EdgeInsets.all(10.0),
+        child: Center(
+          child: SingleChildScrollView(
+            child: SizedBox(
+              width: targetWidth,
+              child: Form(
+                key: _formKey,
                 child: Column(
                   children: [
                     _buildEmailTextField(),
@@ -100,12 +136,13 @@ class _AuthPageState extends State<AuthPage> {
                     ),
                     _buildAcceptSwich(),
                     const SizedBox(
-                      height: 10.0,
+                      height: 20.0,
                     ),
                     Center(
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.white, backgroundColor: Colors.amber, // foreground
+                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.amber, // foreground
                         ),
                         //style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
 
@@ -118,6 +155,8 @@ class _AuthPageState extends State<AuthPage> {
               ),
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
