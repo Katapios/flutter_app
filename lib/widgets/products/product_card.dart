@@ -6,7 +6,7 @@ import './address_tag.dart';
 import './price_tag.dart';
 import '../ui_elements/title_default.dart';
 import '../../models/product.dart';
-import '../../scoped-models/products.dart';
+import '../../scoped-models/main.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
@@ -45,8 +45,8 @@ class ProductCard extends StatelessWidget {
               foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
               backgroundColor: MaterialStateProperty.all<Color>(Colors.red)),
         ),
-        ScopedModelDescendant<ProductsModel>(builder:
-            (BuildContext context, Widget? child, ProductsModel model) {
+        ScopedModelDescendant<MainModel>(builder:
+            (BuildContext context, Widget? child, MainModel model) {
           return IconButton(
             icon: Icon(
               model.products[productIndex].isFavorite
@@ -57,6 +57,7 @@ class ProductCard extends StatelessWidget {
             onPressed: () => {
               model.selectProduct(productIndex),
               model.toggleProductFavoriteStatus(),
+              model.notifyListeners(),
             },
             style: ButtonStyle(
                 foregroundColor: MaterialStateProperty.all<Color>(Colors.white),

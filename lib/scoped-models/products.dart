@@ -1,8 +1,10 @@
+import 'package:denns_introduction_app/scoped-models/main.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import '../models/product.dart';
 
-class ProductsModel extends Model {
+class ProductsModel extends Object{
+  
   List<Product> _products = [];
   int? _selectedProductIndex;
   bool _showFavorites = false;
@@ -36,19 +38,19 @@ class ProductsModel extends Model {
   void addProduct(Product product) {
     _products.add(product);
     _selectedProductIndex = null;
-    notifyListeners();
+    //notifyListeners();
   }
 
   void updateProduct(Product product) {
     _products[_selectedProductIndex!] = product;
     _selectedProductIndex = null;
-    notifyListeners();
+    //notifyListeners();
   }
 
   void deleteProduct() {
     _products.removeAt(_selectedProductIndex!);
     _selectedProductIndex = null;
-    notifyListeners();
+    //notifyListeners();
   }
 
   void toggleProductFavoriteStatus() {
@@ -62,17 +64,17 @@ class ProductsModel extends Model {
         isFavorite: newFavoriteStatus);
     _products[_selectedProductIndex!] = updatedProduct;
     _selectedProductIndex = null;
-    notifyListeners();
+    //notifyListeners();
   }
 
   void selectProduct(int index) {
     _selectedProductIndex = index;
-    notifyListeners();
+    //notifyListeners();
   }
 
   void toggleDisplayMode() {
     _showFavorites = !_showFavorites;
-    notifyListeners();
+    //notifyListeners();
   }
 
 }

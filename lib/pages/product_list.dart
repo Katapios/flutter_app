@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
-import '../scoped-models/products.dart';
+import '../scoped-models/main.dart';
 import '../pages/product_edit.dart';
 
 class ProductListPage extends StatelessWidget {
   const ProductListPage({super.key});
 
 
-  Widget _buildEditButton (BuildContext context, int index, ProductsModel model) {
+  Widget _buildEditButton (BuildContext context, int index, MainModel model) {
       return IconButton(
         icon: const Icon(Icons.edit),
         onPressed: () {
@@ -27,7 +27,7 @@ class ProductListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 10),
-      child: ScopedModelDescendant<ProductsModel>(builder: (BuildContext context, Widget? child, ProductsModel model){
+      child: ScopedModelDescendant<MainModel>(builder: (BuildContext context, Widget? child, MainModel model){
       return ListView.builder(
         itemBuilder: (BuildContext context, int index) {
           print('my index is ' + index.toString());

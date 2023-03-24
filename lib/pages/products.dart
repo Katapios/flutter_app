@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import '../widgets/products/products.dart';
-import '../scoped-models/products.dart';
+import '../scoped-models/main.dart';
 
 class ProductsPage extends StatelessWidget {
 
@@ -33,11 +33,12 @@ class ProductsPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('EasyList'),
         actions: [
-          ScopedModelDescendant(builder:
-              (BuildContext context, Widget? child, ProductsModel model) {
+          ScopedModelDescendant<MainModel>(builder:
+              (BuildContext context, Widget? child, MainModel model) {
             return IconButton(
                 onPressed: () => {
                   model.toggleDisplayMode(),
+                  model.notifyListeners(),
                 }, icon: Icon(
               model.displayFavoritesOnly ?
                 Icons.favorite_outline : Icons.favorite_border,
