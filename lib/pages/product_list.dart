@@ -32,7 +32,7 @@ class ProductListPage extends StatelessWidget {
         itemBuilder: (BuildContext context, int index) {
           print('my index is ' + index.toString());
           return Dismissible(
-            key: Key(model.products[index].title),
+            key: Key(model.allProducts[index].title),
             onDismissed: (DismissDirection direction) {
               if(direction == DismissDirection.endToStart) {
                 model.selectProduct(index);
@@ -48,17 +48,17 @@ class ProductListPage extends StatelessWidget {
               children: [
                 ListTile(
                     leading: CircleAvatar(
-                      backgroundImage: AssetImage(model.products[index].image),
+                      backgroundImage: AssetImage(model.allProducts[index].image),
                     ),
-                    title: Text(model.products[index].title),
-                    subtitle: Text('\$${model.products[index].price.toString()}'),
+                    title: Text(model.allProducts[index].title),
+                    subtitle: Text('\$${model.allProducts[index].price.toString()}'),
                     trailing: _buildEditButton(context, index, model)
                 ),
                 const Divider(color: Colors.grey, thickness: 1),
               ],
             ),);
         },
-        itemCount: model.products.length,
+        itemCount: model.allProducts.length,
       );
     },),
 

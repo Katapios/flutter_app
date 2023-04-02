@@ -38,7 +38,6 @@ class ProductsPage extends StatelessWidget {
             return IconButton(
                 onPressed: () => {
                   model.toggleDisplayMode(),
-                  model.notifyListeners(),
                 }, icon: Icon(
               model.displayFavoritesOnly ?
                 Icons.favorite_outline : Icons.favorite_border,

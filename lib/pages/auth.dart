@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
+
+import '../scoped-models/main.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});
@@ -76,10 +79,9 @@ class _AuthPageState extends State<AuthPage> {
       builder: (FormFieldState<bool> field) {
         return InputDecorator(
           decoration: InputDecoration(
-              filled: true,
-              fillColor: Colors.white,
-              errorText: field.errorText,
-
+            filled: true,
+            fillColor: Colors.white,
+            errorText: field.errorText,
           ),
           child: SwitchListTile(
             contentPadding: EdgeInsets.all(0),
@@ -96,12 +98,12 @@ class _AuthPageState extends State<AuthPage> {
     );
   }
 
-  void _submitForm() {
+  void _submitForm(Function login) {
     if (!_formKey.currentState!.validate() || !_formData['acceptTerms']) {
       return;
     }
     _formKey.currentState!.save();
-    print(_formData);
+    login(_formData['email'], _formData['password']);
     Navigator.pushReplacementNamed(context, '/products');
   }
 
@@ -138,17 +140,19 @@ class _AuthPageState extends State<AuthPage> {
                     const SizedBox(
                       height: 20.0,
                     ),
-                    Center(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          backgroundColor: Colors.amber, // foreground
-                        ),
-                        //style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-
-                        onPressed: _submitForm,
-                        child: const Text('Login'),
-                      ),
+                    ScopedModelDescendant<MainModel>(
+                      builder: (BuildContext context, Widget? child,
+                          MainModel model) {
+                        return ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: Colors.amber, // foreground
+                          ),
+                          //style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                          onPressed: () => _submitForm(model.login),
+                          child: const Text('Login'),
+                        );
+                      },
                     ),
                   ],
                 ),
