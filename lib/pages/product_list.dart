@@ -3,15 +3,29 @@ import 'package:scoped_model/scoped_model.dart';
 import '../scoped-models/main.dart';
 import '../pages/product_edit.dart';
 
-class ProductListPage extends StatelessWidget {
-  const ProductListPage({super.key});
+class ProductListPage extends StatefulWidget {
+  final MainModel model;
 
+  ProductListPage(this.model);
+
+  @override
+  State<StatefulWidget> createState() {
+    return _ProductListPageState();
+  }
+}
+
+class _ProductListPageState extends State<ProductListPage> {
+  @override
+  void initState() {
+    widget.model.fetchProducts();
+    super.initState();
+  }
 
   Widget _buildEditButton (BuildContext context, int index, MainModel model) {
       return IconButton(
         icon: const Icon(Icons.edit),
         onPressed: () {
-          model.selectProduct(index);
+          model.selectProduct(model.allProducts[index].id);
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (BuildContext context) {
@@ -30,12 +44,11 @@ class ProductListPage extends StatelessWidget {
       child: ScopedModelDescendant<MainModel>(builder: (BuildContext context, Widget? child, MainModel model){
       return ListView.builder(
         itemBuilder: (BuildContext context, int index) {
-          print('my index is ' + index.toString());
           return Dismissible(
             key: Key(model.allProducts[index].title),
             onDismissed: (DismissDirection direction) {
               if(direction == DismissDirection.endToStart) {
-                model.selectProduct(index);
+                model.selectProduct(model.allProducts[index].id);
                 model.deleteProduct();
               } else if (direction == DismissDirection.startToEnd) {
                 print('swipe start to end');

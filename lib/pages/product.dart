@@ -7,11 +7,10 @@ import '../widgets/ui_elements/title_default.dart';
 import '../models/product.dart';
 import '../scoped-models/main.dart';
 
-
 class ProductPage extends StatelessWidget {
-  final int productIndex;
+  final Product product;
 
-  const ProductPage(this.productIndex);
+  ProductPage(this.product);
 
   Widget _buildAddressPriceRow(double price) {
     return Row(
@@ -36,8 +35,6 @@ class ProductPage extends StatelessWidget {
     );
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -45,35 +42,32 @@ class ProductPage extends StatelessWidget {
         print('Back button pressed!');
         Navigator.pop(context, false);
         return Future.value(false);
-      }, child: ScopedModelDescendant<MainModel>(
-      builder: (BuildContext context, Widget? child, MainModel model){
-        final Product product = model.allProducts[productIndex];
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(product.title),
-          ),
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Image.asset(product.image),
-              Container(
-                padding: const EdgeInsets.all(10.0),
-                child: TitleDefault(product.title),
-              ),
-              _buildAddressPriceRow(product.price),
-              Container(
-                padding: const EdgeInsets.all(10.0),
-                child: Text(
-                  product.description,
-                  textAlign: TextAlign.center,
-                ),
-              )
-            ],
-          ),
-        );
       },
-    ),
-
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(product.title),
+        ),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            FadeInImage(
+                placeholder: AssetImage('assets/gaika.png'),
+                image: NetworkImage(product.image)),
+            Container(
+              padding: const EdgeInsets.all(10.0),
+              child: TitleDefault(product.title),
+            ),
+            _buildAddressPriceRow(product.price),
+            Container(
+              padding: const EdgeInsets.all(10.0),
+              child: Text(
+                product.description,
+                textAlign: TextAlign.center,
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }

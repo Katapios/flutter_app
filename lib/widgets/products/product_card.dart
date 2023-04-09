@@ -33,21 +33,20 @@ class ProductCard extends StatelessWidget {
   }
 
   Widget _buildActionButtons(BuildContext context) {
-    return ButtonBar(
+    return ScopedModelDescendant<MainModel>(builder:
+        (BuildContext context, Widget? child, MainModel model) {return ButtonBar(
       alignment: MainAxisAlignment.center,
       children: <Widget>[
         IconButton(
           icon: const Icon(Icons.info),
           color: Theme.of(context).primaryColor,
           onPressed: () =>
-              Navigator.pushNamed<dynamic>(context, '/product/$productIndex'),
+              Navigator.pushNamed<dynamic>(context, '/product/' + model.allProducts[productIndex].id),
           style: ButtonStyle(
               foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
               backgroundColor: MaterialStateProperty.all<Color>(Colors.red)),
         ),
-        ScopedModelDescendant<MainModel>(builder:
-            (BuildContext context, Widget? child, MainModel model) {
-          return IconButton(
+          IconButton(
             icon: Icon(
               model.allProducts[productIndex].isFavorite
                   ? Icons.favorite
@@ -55,15 +54,15 @@ class ProductCard extends StatelessWidget {
               color: Colors.red,
             ),
             onPressed: () => {
-              model.selectProduct(productIndex),
+              model.selectProduct(model.allProducts[productIndex].id),
               model.toggleProductFavoriteStatus(),
             },
             style: ButtonStyle(
                 foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.red)),
-          );
-        }),
-      ],
+          ),
+
+      ]);},
     );
   }
 
@@ -72,7 +71,7 @@ class ProductCard extends StatelessWidget {
     return Card(
         child: Column(
       children: <Widget>[
-        Image.network( product.image),
+        FadeInImage(placeholder: AssetImage('assets/gaika.png'), image: NetworkImage(product.image)),
         _buildTitlePriceRow(),
         const AddressTag('Union Square, San Francisco'),
         Text(product.userEmail),
