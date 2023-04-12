@@ -3,6 +3,8 @@ import 'package:scoped_model/scoped_model.dart';
 
 import '../scoped-models/main.dart';
 
+enum AuthMode { Signup, Login }
+
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});
 
@@ -18,6 +20,8 @@ class _AuthPageState extends State<AuthPage> {
   };
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeySwitchListTile = GlobalKey<FormState>();
+  final TextEditingController _passwordTextController = TextEditingController();
+  AuthMode _authMode = AuthMode.Login;
 
   DecorationImage _buildBackgroundImage() {
     return DecorationImage(
@@ -54,6 +58,7 @@ class _AuthPageState extends State<AuthPage> {
       decoration: const InputDecoration(
           labelText: 'Password', filled: true, fillColor: Colors.white),
       obscureText: true,
+      controller: _passwordTextController,
       validator: (dynamic value) {
         if (value.isEmpty || value.length < 6) {
           return 'Password invalid';
@@ -66,6 +71,22 @@ class _AuthPageState extends State<AuthPage> {
         });
       },
     );
+  }
+
+  Widget _buildPasswordConfirmTextField() {
+    return TextFormField(
+        decoration: const InputDecoration(
+            labelText: 'Confirm Password',
+            filled: true,
+            fillColor: Colors.white),
+        obscureText: true,
+        //controller: _passwordTextController,
+        validator: (dynamic value) {
+          if (_passwordTextController.text != value) {
+            return 'Passwords do not match.';
+          }
+          return null;
+        });
   }
 
   Widget _buildAcceptSwich() {
@@ -98,13 +119,39 @@ class _AuthPageState extends State<AuthPage> {
     );
   }
 
-  void _submitForm(Function login) {
+  void _submitForm(Function login, Function signup) async {
     if (!_formKey.currentState!.validate() || !_formData['acceptTerms']) {
       return;
     }
     _formKey.currentState!.save();
-    login(_formData['email'], _formData['password']);
-    Navigator.pushReplacementNamed(context, '/products');
+    Map<String, dynamic> successInformation;
+    if (_authMode == AuthMode.Login) {
+      successInformation =
+          await login(_formData['email'], _formData['password']);
+    } else {
+      successInformation =
+          await signup(_formData['email'], _formData['password']);
+    }
+    if (successInformation['success']) {
+      Navigator.pushReplacementNamed(context, '/products');
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('An Error Occured'),
+            content: Text(successInformation['message']),
+            actions: <Widget>[
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Okay'))
+            ],
+          );
+        },
+      );
+    }
   }
 
   @override
@@ -136,22 +183,59 @@ class _AuthPageState extends State<AuthPage> {
                     const SizedBox(
                       height: 10.0,
                     ),
+                    _authMode == AuthMode.Signup
+                        ? _buildPasswordConfirmTextField()
+                        : Container(),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
                     _buildAcceptSwich(),
                     const SizedBox(
-                      height: 20.0,
+                      height: 15.0,
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        setState(() {
+                          _authMode = _authMode == AuthMode.Login
+                              ? AuthMode.Signup
+                              : AuthMode.Login;
+                        });
+                      },
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.white38),
+                        padding: MaterialStateProperty.all<EdgeInsets>(
+                            EdgeInsets.fromLTRB(10, 5, 10, 5)),
+                      ),
+                      child: Text(
+                        'Switch to ${_authMode == AuthMode.Login ? 'Signup' : 'Login'}',
+                        style: TextStyle(
+                          height: 1.0,
+                          fontSize: 12,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10.0,
                     ),
                     ScopedModelDescendant<MainModel>(
                       builder: (BuildContext context, Widget? child,
                           MainModel model) {
-                        return ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            backgroundColor: Colors.amber, // foreground
-                          ),
-                          //style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                          onPressed: () => _submitForm(model.login),
-                          child: const Text('Login'),
-                        );
+                        return model.isLoading
+                            ? CircularProgressIndicator(color: Colors.green)
+                            : ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  foregroundColor: Colors.white,
+                                  backgroundColor: Colors.amber, // foreground
+                                ),
+                                //style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                                onPressed: () =>
+                                    _submitForm(model.login, model.signup),
+                                child: Text(_authMode == AuthMode.Login
+                                    ? 'Login'
+                                    : 'Signup'),
+                              );
                       },
                     ),
                   ],

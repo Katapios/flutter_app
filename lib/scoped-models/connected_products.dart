@@ -230,9 +230,58 @@ mixin ProductsModel on ConnectedProductsModel {
 
 mixin UserModel on ConnectedProductsModel {
   //ConnectedProductsModel myModel = ConnectedProductsModel();
+  Future<Map<String, dynamic>> login(String email, String password) async{
+    _isLoading = true;
+    notifyListeners();
+    final Map<String,dynamic> authData = {
+      'email' : email,
+      'password' : password,
+      'returnSecureToken' : true
+    };
+    final http.Response response = await http.post(Uri.parse('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCbk9gJh-JDyMzXjcqGtMvq9pCbNtazgS0'), body:  json.encode(authData), headers:
+    {'Content-Type' : 'application/json'});
+    final Map<String, dynamic> responseData = json.decode(response.body);
+    bool hasError = true;
+    String message = 'Something went wrong';
+    print(responseData);
+    if(responseData.containsKey('idToken')) {
+      hasError = false;
+      message = 'Authentication Succeeded';
+    } else if (responseData['error']['message'] == 'EMAIL_NOT_FOUND') {
+      message = 'This email was not found.';
+    } else if (responseData['error']['message'] == 'INVALID_PASSWORD') {
+      message = 'The password is invalid.';
+    }
+    _isLoading = false;
+    notifyListeners();
+    return {'success' : !hasError, 'message' : message};
+  }
 
-  void login(String email, String password) {
-    _authenticatedUser = User(id: 'asdas', email: email, password: password);
+  Future<Map<String, dynamic>> signup(String email, String password) async{
+    _isLoading = true;
+     notifyListeners();
+    final Map<String,dynamic> authData = {
+      'email' : email,
+      'password' : password,
+      'returnSecureToken' : true
+    };
+    final http.Response response =  await http.post(Uri.parse(
+        'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCbk9gJh-JDyMzXjcqGtMvq9pCbNtazgS0'),
+        body: json.encode(authData),
+      headers: {'Content-Type' : 'application/json'}
+    );
+    final Map<String, dynamic> responseData = json.decode(response.body);
+    bool hasError = true;
+    String message = 'Something went wrong';
+    if(responseData.containsKey('idToken')) {
+      hasError = false;
+      message = 'Authentication Succeeded';
+    } else if (responseData['error']['message'] == 'EMAIL_EXISTS') {
+      message = 'This email already exists.';
+    }
+    _isLoading = false;
+    notifyListeners();
+    return {'success' : !hasError, 'message' : message};
   }
 }
 
