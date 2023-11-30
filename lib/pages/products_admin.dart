@@ -1,4 +1,4 @@
-
+import 'package:denns_introduction_app/widgets/ui_elements/logout_list_tile.dart';
 import 'package:flutter/material.dart';
 import './product_edit.dart';
 import './product_list.dart';
@@ -23,7 +23,9 @@ class ProductsAdminPage extends StatelessWidget {
             onTap: () {
               Navigator.pushReplacementNamed(context, '/products');
             },
-          )
+          ),
+          Divider(),
+          LogoutListTile()
         ],
       ),
     );

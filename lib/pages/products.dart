@@ -1,3 +1,4 @@
+import 'package:denns_introduction_app/widgets/ui_elements/logout_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -14,8 +15,8 @@ class ProductsPage extends StatefulWidget {
     return _ProductsPageState();
   }
 }
-class _ProductsPageState extends State<ProductsPage> {
 
+class _ProductsPageState extends State<ProductsPage> {
   @override
   void initState() {
     widget.model.fetchProducts();
@@ -36,22 +37,28 @@ class _ProductsPageState extends State<ProductsPage> {
             onTap: () {
               Navigator.pushReplacementNamed(context, '/admin');
             },
-          )
+          ),
+          Divider(),
+          LogoutListTile()
         ],
       ),
     );
   }
 
   Widget _buildProductsList() {
-    return ScopedModelDescendant(builder: (BuildContext context, Widget? child, MainModel model) {
-      Widget content = Center(child: Text('no products found'));
-      if(model.displayedProducts.length > 0 && !model.isLoading) {
-        content = Products();
-      } else if(model.isLoading) {
-        content = Center(child: CircularProgressIndicator(color: Colors.green),);
-      }
-      return RefreshIndicator(onRefresh: model.fetchProducts, child: content);
-    },);
+    return ScopedModelDescendant(
+      builder: (BuildContext context, Widget? child, MainModel model) {
+        Widget content = Center(child: Text('no products found'));
+        if (model.displayedProducts.length > 0 && !model.isLoading) {
+          content = Products();
+        } else if (model.isLoading) {
+          content = Center(
+            child: CircularProgressIndicator(color: Colors.green),
+          );
+        }
+        return RefreshIndicator(onRefresh: model.fetchProducts, child: content);
+      },
+    );
   }
 
   @override
@@ -61,15 +68,17 @@ class _ProductsPageState extends State<ProductsPage> {
       appBar: AppBar(
         title: const Text('EasyList'),
         actions: [
-          ScopedModelDescendant<MainModel>(builder:
-              (BuildContext context, Widget? child, MainModel model) {
+          ScopedModelDescendant<MainModel>(
+              builder: (BuildContext context, Widget? child, MainModel model) {
             return IconButton(
                 onPressed: () => {
-                  model.toggleDisplayMode(),
-                }, icon: Icon(
-              model.displayFavoritesOnly ?
-                Icons.favorite_outline : Icons.favorite_border,
-            ));
+                      model.toggleDisplayMode(),
+                    },
+                icon: Icon(
+                  model.displayFavoritesOnly
+                      ? Icons.favorite_outline
+                      : Icons.favorite_border,
+                ));
           })
         ],
       ),
